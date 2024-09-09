@@ -17,7 +17,6 @@ export const databaseProviders = {
             entities: [__dirname + '/Entities/*.entity{.ts,.js}'],
             synchronize: true,
           });
-          console.log('hello');
           await dataSource.initialize();
           console.log(
             `Database connected successfully on port ${dataSource.options['port']}`,
