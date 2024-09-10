@@ -6,7 +6,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '@/src/database/Entities/user.entity';
-import { CreateUserDto, UpdateUserDto } from '@/src/modules/users/dtos/user.dto';
+import {
+  CreateUserDto,
+  UpdateUserDto,
+} from '@/src/modules/users/dtos/user.dto';
 import { USER_CREATED_EARLIER, USER_NOT_FOUND } from '@/src/utils/consts';
 import { generateHash } from '@/src/utils';
 
