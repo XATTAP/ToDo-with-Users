@@ -1,8 +1,10 @@
-import { PASSWORD_REGULAR_VALIDATION } from '@/src/utils/consts';
+import { PASSWORD_REGULAR_VALIDATION, SEARCH_FORMAT_VALIDATION, SORT_FORMAT_VALIDATION } from '@/src/utils/consts';
 import {
   IsEmail,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   Length,
   Matches,
@@ -54,4 +56,30 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   password?: string;
+}
+
+export class SearchUsersDto {
+  @Matches(/^[\w]+:[\w]+$/, {
+    message: SEARCH_FORMAT_VALIDATION.message,
+  })
+  @IsString()
+  @IsOptional()
+  search?: string;
+
+  @Matches(/^[\w]+:[A-Z]+$/, {
+    message: SORT_FORMAT_VALIDATION.message,
+  })
+  @IsString()
+  @IsOptional()
+  sort?: string;
+
+  @IsPositive()
+  @IsNumber()
+  @IsOptional()
+  page?: number = 1;
+
+  @IsPositive()
+  @IsNumber()
+  @IsOptional()
+  limit?: number = 50;
 }

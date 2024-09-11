@@ -7,10 +7,12 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { UserService } from '@/src/modules/users/user.service';
 import {
   CreateUserDto,
+  SearchUsersDto,
   UpdateUserDto,
 } from '@/src/modules/users/dtos/user.dto';
 
@@ -19,8 +21,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Query() query: SearchUsersDto) {
+    return this.userService.findAll(query);
   }
 
   @Get(':id')

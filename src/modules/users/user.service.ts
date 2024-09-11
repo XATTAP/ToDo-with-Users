@@ -4,10 +4,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Like, Repository } from 'typeorm';
 import { User } from '@/src/database/Entities/user.entity';
 import {
   CreateUserDto,
+  SearchUsersDto,
   UpdateUserDto,
 } from '@/src/modules/users/dtos/user.dto';
 import { USER_CREATED_EARLIER, USER_NOT_FOUND } from '@/src/utils/consts';
@@ -30,8 +31,29 @@ export class UserService {
     return user;
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
+  async findAll(query: SearchUsersDto): Promise<User[]> {
+    const findManyOptions: FindManyOptions = {
+      skip: (query.page - 1) * query.limit,
+      take: query.limit,
+    };
+
+    if (query.sort) {
+      const [sortField, sortOrder] = query.sort.split(':');
+      findManyOptions.order = {
+        [sortField]: sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC',
+      };
+    }
+
+    if (query.search) {
+      const [searchField, searchValue] = query.search.split(':');
+      findManyOptions.where = {
+        ...findManyOptions.where,
+        [searchField]: Like(`%${searchValue}%`),
+      };
+    }
+
+    const users = await this.userRepository.find(findManyOptions);
+    return users;
   }
 
   async createUser(body: CreateUserDto) {
