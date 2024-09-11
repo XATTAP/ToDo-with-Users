@@ -47,6 +47,8 @@ export class UserService {
 
   async updateUser(id: number, body: UpdateUserDto) {
     const user = await this.findById(id);
+    if(body.password)
+      body.password = await generateHash(body.password);
     return await this.userRepository.save({ id: user.id, ...body });
   }
 
