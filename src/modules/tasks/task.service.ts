@@ -1,9 +1,10 @@
 import { Task } from '@/src/database/Entities/task.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Like, Repository } from 'typeorm';
 import {
   CreateTaskDto,
+  SearchTasksDto,
   UpdateTaskDto,
 } from '@/src/modules/tasks/dtos/task.dto';
 import { TASK_NOT_FOUND } from '@/src/utils/consts';
@@ -25,14 +26,34 @@ export class TaskService {
     return task;
   }
 
-  async findAllByUser(userId: number) {
-    return await this.taskRepository.find({
+  async findAllByUser(userId: number, query: SearchTasksDto) {
+    const findManyOptions: FindManyOptions = {
+      skip: (query.page - 1) * query.limit,
+      take: query.limit,
       where: {
         user: {
           id: userId,
         },
       },
-    });
+    };
+
+    if (query.sort) {
+      const [sortField, sortOrder] = query.sort.split(':');
+      findManyOptions.order = {
+        [sortField]: sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC',
+      };
+    }
+
+    if (query.search) {
+      const [searchField, searchValue] = query.search.split(':');
+      findManyOptions.where = {
+        ...findManyOptions.where,
+        [searchField]: Like(`%${searchValue}%`),
+      };
+    }
+
+    const tasks = await this.taskRepository.find(findManyOptions);
+    return tasks;
   }
 
   async createTask(body: CreateTaskDto) {

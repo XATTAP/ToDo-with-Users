@@ -7,10 +7,12 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { TaskService } from '@/src/modules/tasks/task.service';
 import {
   CreateTaskDto,
+  SearchTasksDto,
   UpdateTaskDto,
 } from '@/src/modules/tasks/dtos/task.dto';
 
@@ -19,8 +21,11 @@ export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   @Get(':userId')
-  findAllByUser(@Param('userId', ParseIntPipe) userId: number) {
-    return this.taskService.findAllByUser(userId);
+  findAllByUser(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Query() query: SearchTasksDto,
+  ) {
+    return this.taskService.findAllByUser(userId, query);
   }
 
   @Post()
