@@ -28,8 +28,8 @@ export class TaskService {
 
   async findAllByUser(userId: number, query: SearchTasksDto) {
     const findManyOptions: FindManyOptions = {
-      skip: (query.page - 1) * query.limit,
-      take: query.limit,
+      skip: (Number(query.page) - 1) * Number(query.limit),
+      take: Number(query.limit),
       where: {
         user: {
           id: userId,
@@ -52,7 +52,7 @@ export class TaskService {
       };
     }
 
-    const tasks = await this.taskRepository.find(findManyOptions);
+    const tasks = (await this.taskRepository.find(findManyOptions))
     return tasks;
   }
 

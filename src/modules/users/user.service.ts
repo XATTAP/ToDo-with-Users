@@ -33,8 +33,8 @@ export class UserService {
 
   async findAll(query: SearchUsersDto): Promise<User[]> {
     const findManyOptions: FindManyOptions = {
-      skip: (query.page - 1) * query.limit,
-      take: query.limit,
+      skip: (Number(query.page) - 1) * Number(query.limit),
+      take: Number(query.limit),
     };
 
     if (query.sort) {

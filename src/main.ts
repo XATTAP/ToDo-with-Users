@@ -9,6 +9,7 @@ import {
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const globalPipesOptions: ValidationPipeOptions = {
+  transformOptions: { enableImplicitConversion: true },
   whitelist: true,
   exceptionFactory: (validationErrors: ValidationError[] = []) => {
     const formattedErrors = validationErrors.map((error) => ({
