@@ -35,7 +35,7 @@ export class CreateUserDto {
     required: true,
   })
   @Matches(
-    /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/,
+    /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[а-яА-Яa-zA-Z0-9!@#$%^&*]{8,}$/,
     {
       message: PASSWORD_REGULAR_VALIDATION.message,
     },
@@ -66,7 +66,7 @@ export class UpdateUserDto {
     required: true,
   })
   @Matches(
-    /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/,
+    /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[а-яА-Яa-zA-Z0-9!@#$%^&*]{8,}$/,
     {
       message: PASSWORD_REGULAR_VALIDATION.message,
     },
@@ -83,7 +83,7 @@ export class SearchUsersDto {
       'Поле поиска. Должно быть в формате "field:value", где field - поле, по которому будет осуществлен поиск, а value - значение поля',
     required: false,
   })
-  @Matches(/^[\w]+:[\w]+$/, {
+  @Matches(/^[\w]+:[а-яА-Яa-zA-Z0-9!@#$%^&_*]+$/, {
     message: SEARCH_FORMAT_VALIDATION.message,
   })
   @IsString()

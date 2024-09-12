@@ -63,7 +63,7 @@ export class SearchTasksDto {
       'Поле поиска. Должно быть в формате "field:value", где field - поле, по которому будет осуществлен поиск, а value - значение поля',
     required: false,
   })
-  @Matches(/^[\w]+:[\w]+$/, {
+  @Matches(/^[\w]+:[а-яА-Яa-zA-Z0-9!@#$%^&_*]+$/, {
     message: SEARCH_FORMAT_VALIDATION.message,
   })
   @IsString()
