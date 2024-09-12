@@ -25,9 +25,7 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { id },
     });
-    if (!user) {
-      throw new NotFoundException({ message: USER_NOT_FOUND.message });
-    }
+    if (!user) throw new NotFoundException({ message: USER_NOT_FOUND.message });
     return user;
   }
 
@@ -60,14 +58,22 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { email: body.email },
     });
-    if (user) {
+    if (user)
       throw new ConflictException({ message: USER_CREATED_EARLIER.message });
-    }
+
     body.password = await generateHash(body.password);
     return await this.userRepository.save(body);
   }
 
   async updateUser(id: number, body: UpdateUserDto) {
+    if (body.email) {
+      const foundUser = await this.userRepository.findOne({
+        where: { email: body.email },
+      });
+      if (foundUser)
+        throw new ConflictException({ message: USER_CREATED_EARLIER.message });
+    }
+
     const user = await this.findById(id);
     if (body.password) body.password = await generateHash(body.password);
     return await this.userRepository.save({ id: user.id, ...body });

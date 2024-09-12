@@ -8,21 +8,21 @@ import {
   UpdateTaskDto,
 } from '@/src/modules/tasks/dtos/task.dto';
 import { TASK_NOT_FOUND } from '@/src/utils/consts';
+import { UserService } from '@/src/modules/users/user.service';
 
 @Injectable()
 export class TaskService {
   constructor(
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
+    private readonly userService: UserService
   ) {}
 
   async findById(id: number) {
     const task = await this.taskRepository.findOne({
       where: { id },
     });
-    if (!task) {
-      throw new NotFoundException({ message: TASK_NOT_FOUND.message });
-    }
+    if (!task) throw new NotFoundException({ message: TASK_NOT_FOUND.message });
     return task;
   }
 
@@ -52,16 +52,19 @@ export class TaskService {
       };
     }
 
-    const tasks = (await this.taskRepository.find(findManyOptions))
+    const tasks = await this.taskRepository.find(findManyOptions);
     return tasks;
   }
 
   async createTask(body: CreateTaskDto) {
+    await this.userService.findById(body.userId)
     return await this.taskRepository.save(body);
   }
 
   async updateTask(id: number, body: UpdateTaskDto) {
     const task = await this.findById(id);
+    if (body.userId)
+      await this.userService.findById(body.userId)
     return await this.taskRepository.save({ id: task.id, ...body });
   }
 

@@ -25,6 +25,14 @@ export class CreateTaskDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @ApiProperty({
+    description: 'Id пользователя, которому назначена задача',
+    required: true,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
 }
 
 export class UpdateTaskDto {
@@ -39,6 +47,14 @@ export class UpdateTaskDto {
   @IsString()
   @IsOptional()
   description?: string;
+
+  @ApiProperty({
+    description: 'Id пользователя, которому назначена задача',
+    required: false,
+  })
+  @IsNumber()
+  @IsOptional()
+  userId?: number;
 }
 
 export class SearchTasksDto {
