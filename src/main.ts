@@ -6,6 +6,7 @@ import {
   ValidationPipe,
   ValidationPipeOptions,
 } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 const globalPipesOptions: ValidationPipeOptions = {
   whitelist: true,
@@ -22,8 +23,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, appOptions);
   app.useGlobalPipes(new ValidationPipe(globalPipesOptions));
 
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Документация ToDo сервиса')
+    .setDescription('Документация тестового сервиса для создания задач')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('swagger', app, document);
+
   await app.listen(process.env.SERVER_PORT || 3000);
   const url = await app.getUrl();
   console.log(`server start on ${url}`);
 }
+
 bootstrap();
