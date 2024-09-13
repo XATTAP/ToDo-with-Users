@@ -34,6 +34,9 @@ export class User {
   })
   password: string;
 
+  @Column({default: 1})
+  role: number
+
   @OneToMany(() => Task, (task) => task.user, {
     cascade: true,
   })
