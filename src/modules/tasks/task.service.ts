@@ -15,7 +15,7 @@ export class TaskService {
   constructor(
     @InjectRepository(Task)
     private readonly taskRepository: Repository<Task>,
-    private readonly userService: UserService
+    private readonly userService: UserService,
   ) {}
 
   async findById(id: number) {
@@ -57,14 +57,13 @@ export class TaskService {
   }
 
   async createTask(body: CreateTaskDto) {
-    await this.userService.findById(body.userId)
+    await this.userService.findById(body.userId);
     return await this.taskRepository.save(body);
   }
 
   async updateTask(id: number, body: UpdateTaskDto) {
     const task = await this.findById(id);
-    if (body.userId)
-      await this.userService.findById(body.userId)
+    if (body.userId) await this.userService.findById(body.userId);
     return await this.taskRepository.save({ id: task.id, ...body });
   }
 
